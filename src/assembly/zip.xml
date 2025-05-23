@@ -1,0 +1,35 @@
+<assembly
+        xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <id>release</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <baseDirectory>${project.artifactId}</baseDirectory>
+    <fileSets>
+        <!-- 修正bins目录路径 -->
+        <fileSet>
+            <directory>src/bin</directory>  <!-- 修正为正确的目录名 -->
+            <outputDirectory>bin</outputDirectory>
+            <fileMode>0755</fileMode>
+        </fileSet>
+
+        <!-- 添加依赖库目录 -->
+        <fileSet>
+            <directory>target/lib</directory>
+            <outputDirectory>lib</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+    <!-- 修正文件路径 -->
+    <files>
+        <file>
+            <source>target/${project.build.finalName}.jar</source>
+            <outputDirectory>/</outputDirectory>
+        </file>
+    </files>
+    <!-- 添加以下属性 -->
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+</assembly>

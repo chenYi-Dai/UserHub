@@ -28,6 +28,7 @@
     </scm>
     <properties>
         <java.version>1.8</java.version>
+        <springfox-swagger.version>3.0.0</springfox-swagger.version>
     </properties>
     <dependencies>
         <dependency>
@@ -35,10 +36,70 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>3.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.23</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>4.0.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- swagger  start-->
+
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>swagger-bootstrap-ui</artifactId>
+            <version>1.9.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-swagger.version}</version>
+        </dependency>
+        <!-- swagger  end-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.83</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -47,7 +108,7 @@
     </dependencies>
 
     <build>
-        <finalName>UserHub</finalName>
+        <finalName>user-hub</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -82,40 +143,21 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.3.0</version>
-                <configuration>
-                    <archiverConfig>
-                        <defaultDirectoryMode>0755</defaultDirectoryMode>
-                    </archiverConfig>
-                </configuration>
                 <executions>
                     <execution>
                         <id>make-dir</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
+                        <!-- 添加以下配置禁止附加目录 -->
                         <configuration>
-                            <!--满足自动编译系统的规则，放到target/package/main目录下，这种和编译系统耦合的做法比较奇葩-->
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <finalName>package</finalName>
-                            <descriptors> <!--描述文件路径-->
-                                <descriptor>src/assembly/dir.xml</descriptor>
-                            </descriptors>
+                            <attach>false</attach>
                         </configuration>
                     </execution>
                     <execution>
                         <id>make-zip</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
                         <configuration>
-                            <!--真正控制打包的名字，如果有就用这个，没有就是artifactId-version-->
-                            <finalName>UserHub</finalName>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <descriptors>
-                                <descriptor>src/assembly/zip.xml</descriptor>
-                            </descriptors>
+                            <!-- 添加附加配置 -->
+                            <attach>true</attach>
+                            <!-- 修正最终名称格式 -->
+                            <finalName>${project.artifactId}-${project.version}</finalName>
                         </configuration>
                     </execution>
                 </executions>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yichen.userhub.dao.TUserInfoDao">
+	<resultMap type="com.yichen.userhub.entity.UserInfoDO" id="userInfoMap">
+		<result property="id" column="id"/>
+		<result property="userId" column="user_id"/>
+		<result property="userAccount" column="user_account"/>
+		<result property="userName" column="user_name"/>
+		<result property="userStatus" column="user_state"/>
+		<result property="userEmail" column="user_email"/>
+		<result property="loginPassword" column="login_password"/>
+		<result property="loginPasswordErrors" column="login_password_errors"/>
+		<result property="userAddress" column="user_address"/>
+		<result property="phoneNo" column="phone_no"/>
+		<result property="headPortrait" column="head_portrait"/>
+		<result property="phoneNo" column="phone_no"/>
+		<result property="createBy" column="create_by"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifyBy" column="modify_by"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="lastLoginTime" column="last_login_time"/>
+		<result property="currentLoginTime" column="current_login_time"/>
+		<result property="deleteFlag" column="delete_flag"/>
+	</resultMap>
+	
+	<sql id="table_columns">
+		id,
+		user_id,
+		user_account,
+		user_name,
+		user_state,
+		user_email,
+		login_password,
+		login_password_errors,
+		user_address,
+		phone_no,
+		head_portrait,
+		last_login_time,
+		current_login_time,
+		create_by,
+		create_time,
+		modify_by,
+		modify_time,
+		remark,
+		delete_flag
+    </sql>
+	<sql id="entity_properties">
+		#{id},
+		#{userId},
+		#{userAccount},
+		#{userName},
+		#{userEmail},
+		#{loginPassword},
+		#{loginPasswordErrors},
+		#{userAddress},
+		#{phoneNo},
+		#{headPortrait},
+		#{lastLoginTime},
+		#{currentLoginTime},
+		#{deleteFlag},
+		#{remark},
+		#{createBy},
+		#{createTime},
+		#{modifyBy},
+		#{modifyTime},
+		#{deleteFlag}
+	</sql>
+
+	<insert id="addUserInfo" parameterType="com.yichen.userhub.entity.UserInfoDO" useGeneratedKeys="true">
+		insert into t_user_info( <include refid="table_columns" /> )
+		values ( <include refid="entity_properties" /> )
+	</insert>
+
+
+	<select id="getUserInfoById" resultMap="userInfoMap">
+		select <include refid="table_columns" /> FROM t_user_info
+		WHERE id = #{id}
+	</select>
+
+	<update id="updateUserInfo" parameterType="com.yichen.userhub.entity.UserInfoDO">
+		UPDATE t_user_info
+		SET
+			name = #{name},
+			email = #{email},
+			modified_time = NOW()
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteUserInfoById">
+		DELETE FROM t_user_info
+		WHERE id = #{id}
+	</delete>
+
+	<select id="getUserInfoByAccount" parameterType="com.yichen.userhub.entity.UserInfoDO"
+			resultType="com.yichen.userhub.entity.UserInfoDO">
+		SELECT * FROM t_user_info
+		WHERE account = #{account}
+		<if test="name != null">
+			AND name = #{name}
+		</if>
+	</select>
+
+	<select id="userInfoList" parameterType="com.yichen.userhub.entity.UserInfoDO"
+			resultType="com.yichen.userhub.entity.UserInfoDO">
+		SELECT * FROM t_user_info
+		<where>
+			<if test="account != null">
+				AND account LIKE CONCAT('%', #{account}, '%')
+			</if>
+			<if test="name != null">
+				AND name LIKE CONCAT('%', #{name}, '%')
+			</if>
+		</where>
+	</select>
+</mapper>
